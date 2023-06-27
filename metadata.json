@@ -1,0 +1,19 @@
+{
+  "KPlugin": {
+    "Id": "org.kde.Arstotzka.decoration",
+    "Name": "Arstotzka",
+    "Description": "KDE Plasma Window Decoration consisting of single colorful rectangle",
+    "Comment": "KDE Plasma Window Decoration consisting of single colorful rectangle",
+    "X-KDE-PluginInfo-Name": "Arstotzka",
+    "X-KDE-PluginInfo-Author": "rkuklik",
+    "X-KDE-PluginInfo-Website": "https://github.com/rkuklik/arstotzka",
+    "X-KDE-PluginInfo-Version": "1.0",
+    "X-KDE-PluginInfo-License": "GPLv3",
+    "ServiceTypes": ["org.kde.kdecoration2"]
+  },
+  "org.kde.kdecoration2": {
+    "blur": false,
+    "kcmodule": false,
+    "recommendedBorderSize": "Normal"
+  }
+}
