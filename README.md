@@ -13,7 +13,7 @@ Then it can be enabled in System Settings > Appearance > Window Decorations > Ar
 ## Requirements
 
 - CMake >= 3.16
-- KDE Frameworks >= 5.15.0
-- QT5 >= 5.78.0
+- KDE Frameworks >= 5.78.0
+- QT5 >= 5.15.0
 - C++ 17 compiler
 - [just](https://github.com/casey/just)

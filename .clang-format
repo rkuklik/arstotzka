@@ -31,6 +31,10 @@ ForEachMacros:
     wl_resource_for_each,
     wl_resource_for_each_safe
   ]
-AllowShortLambdasOnASingleLine: Empty
+BraceWrapping:
+  AfterClass: false
+AllowShortLambdasOnASingleLine: Inline
+AllowShortIfStatementsOnASingleLine: true
+AllowShortBlocksOnASingleLine: true
 AllowAllArgumentsOnNextLine: false
 UseTab: Never

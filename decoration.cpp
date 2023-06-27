@@ -26,9 +26,7 @@ void Decoration::init() {
 }
 
 void Decoration::paint(QPainter *painter, const QRect &repaintRegion) {
-    if (!painter) {
-        return;
-    }
+    if (!painter) { return; }
 
     auto client = this->client().lock();
     auto windowRect = rect();
@@ -75,9 +73,7 @@ void Decoration::connectEvents() {
     connect(clientPtr,
             &KDecoration2::DecoratedClient::activeChanged,
             this,
-            [this](bool value) {
-                this->update();
-            });
+            [this](bool value) { this->update(); });
 
     connect(settingsPtr,
             &KDecoration2::DecorationSettings::borderSizeChanged,
@@ -88,9 +84,7 @@ void Decoration::connectEvents() {
             &KConfigWatcher::configChanged,
             this,
             [this](const KConfigGroup &group, const QByteArrayList &names) {
-                if (group.name() != QStringLiteral("General")) {
-                    return;
-                }
+                if (group.name() != QStringLiteral("General")) { return; }
                 if (false // I want nice alignment
                     || names.contains(QByteArrayLiteral("ColorScheme"))
                     || names.contains(QByteArrayLiteral("AccentColor"))) {

@@ -41,5 +41,4 @@ private:
 
     KConfigWatcher::Ptr m_kdeglobalsWatcher;
 };
-
 }

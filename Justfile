@@ -22,5 +22,5 @@ setup:
 clean:
     -rm -rf {{target}} .cache {{lsp}}
 
-dev: setup
-    cp {{target}}/{{lsp}} {{lsp}}
+dev: build
+    ln -sf {{target}}/{{lsp}} {{lsp}}
