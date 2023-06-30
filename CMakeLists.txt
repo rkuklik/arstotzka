@@ -27,9 +27,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 find_package(${QT} ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS Core)
-
 find_package(${KF} ${KF5_MIN_VERSION} REQUIRED COMPONENTS Config ConfigWidgets)
-
 find_package(KDecoration2 REQUIRED)
 
 add_library(arstotzka MODULE)
