@@ -31,13 +31,11 @@ find_package(${KF} ${KF5_MIN_VERSION} REQUIRED COMPONENTS Config ConfigWidgets)
 find_package(KDecoration2 REQUIRED)
 
 add_library(arstotzka MODULE)
-
 target_sources(arstotzka PRIVATE decoration.cpp decoration.hpp)
-
 target_link_libraries(
     arstotzka
     PUBLIC Qt::Core
-    PRIVATE KDecoration2::KDecoration KF5::ConfigCore KF5::ConfigWidgets
+    PRIVATE KDecoration2::KDecoration ${KF}::ConfigCore ${KF}::ConfigWidgets
 )
 
 install(

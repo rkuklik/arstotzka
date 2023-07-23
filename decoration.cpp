@@ -2,7 +2,6 @@
 
 #include <QPainter>
 
-#include <KConfigGroup>
 #include <KDecoration2/DecoratedClient>
 #include <KDecoration2/DecorationSettings>
 #include <KPluginFactory>
@@ -105,11 +104,11 @@ int Decoration::borderSize() const {
         return baseSize * 5;
     case KDecoration2::BorderSize::VeryLarge:
         return baseSize * 4;
+    case KDecoration2::BorderSize::Large:
+        return baseSize * 3;
     case KDecoration2::BorderSize::NoSides:
     case KDecoration2::BorderSize::Normal:
         return baseSize * 2;
-    case KDecoration2::BorderSize::Large:
-        return baseSize * 3;
     case KDecoration2::BorderSize::None:
         return 0;
     case KDecoration2::BorderSize::Tiny:

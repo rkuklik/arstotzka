@@ -1,7 +1,5 @@
 #pragma once
 
-#include <QVariant>
-
 #include <KConfigWatcher>
 #include <KDecoration2/Decoration>
 
