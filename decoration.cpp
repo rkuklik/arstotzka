@@ -16,18 +16,20 @@ Decoration::Decoration(QObject *parent, const QVariantList &args)
     : KDecoration2::Decoration(parent, args) {
 }
 
-void Decoration::init() {
+bool Decoration::init() {
     m_kdeglobalsWatcher = KConfigWatcher::create(KSharedConfig::openConfig("kdeglobals"));
 
     setBorderSizes();
     connectEvents();
     updateColors();
+
+    return true;
 }
 
 void Decoration::paint(QPainter *painter, const QRect &repaintRegion) {
     if (!painter) { return; }
 
-    auto client = this->client().lock();
+    auto client = this->client();
     auto windowRect = rect();
 
     painter->save();
@@ -51,7 +53,7 @@ void Decoration::updateColors() {
 }
 
 void Decoration::setBorderSizes() {
-    const auto client = this->client().lock();
+    const auto client = this->client();
 
     const int left = (settings()->borderSize() == KDecoration2::BorderSize::NoSides)
         ? 0
@@ -66,8 +68,8 @@ void Decoration::setBorderSizes() {
 }
 
 void Decoration::connectEvents() {
-    auto clientPtr = this->client().lock().data();
-    auto settingsPtr = settings().data();
+    auto clientPtr = this->client();
+    auto settingsPtr = settings().get();
 
     connect(clientPtr,
             &KDecoration2::DecoratedClient::activeChanged,
