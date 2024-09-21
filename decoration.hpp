@@ -30,13 +30,12 @@ public Q_SLOTS:
 private:
     void updateColors();
     void setBorderSizes();
+    void changeActive();
     void connectEvents();
 
-    int borderSize() const;
+    QColor activeColor;
+    QColor inactiveColor;
 
-    QColor m_activeColor;
-    QColor m_inactiveColor;
-
-    KConfigWatcher::Ptr m_kdeglobalsWatcher;
+    KConfigWatcher::Ptr configWatcher;
 };
 }
