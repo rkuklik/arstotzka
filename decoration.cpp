@@ -55,26 +55,26 @@ void Decoration::updateColors() {
     inactiveColor = group.readEntry("BackgroundNormal", QColor(0, 0, 0));
 }
 
-inline constexpr int sizeToInt(const BorderSize size, const int base) {
+inline constexpr int sizeToInt(const BorderSize size) const noexcept {
     switch (size) {
     case BorderSize::Oversized:
-        return base * 10;
+        return 10;
     case BorderSize::VeryHuge:
-        return base * 6;
+        return 6;
     case BorderSize::Huge:
-        return base * 5;
+        return 5;
     case BorderSize::VeryLarge:
-        return base * 4;
+        return 4;
     case BorderSize::Large:
-        return base * 3;
+        return 3;
     case BorderSize::NoSides:
     case BorderSize::Normal:
-        return base * 2;
+        return 2;
     case BorderSize::None:
         return 0;
     case BorderSize::Tiny:
     default:
-        return base;
+        return 1;
     }
 }
 
@@ -83,7 +83,7 @@ void Decoration::setBorderSizes() {
     const shared_ptr<DecorationSettings> config = settings();
     const BorderSize desired = config->borderSize();
     const int base = config->smallSpacing();
-    const int size = sizeToInt(desired, base);
+    const int size = base * sizeToInt(desired);
     const int sides = (desired == BorderSize::NoSides) ? 0 : size;
 
     setBorders(QMargins(sides, size, sides, size));
