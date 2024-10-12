@@ -55,7 +55,7 @@ void Decoration::updateColors() {
     inactiveColor = group.readEntry("BackgroundNormal", QColor(0, 0, 0));
 }
 
-inline constexpr int sizeToInt(const BorderSize size) const noexcept {
+inline constexpr int sizeToInt(const BorderSize size) {
     switch (size) {
     case BorderSize::Oversized:
         return 10;
