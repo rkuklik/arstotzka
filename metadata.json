@@ -9,11 +9,11 @@
     "X-KDE-PluginInfo-Website": "https://github.com/rkuklik/arstotzka",
     "X-KDE-PluginInfo-Version": "1.0",
     "X-KDE-PluginInfo-License": "GPLv3",
-    "ServiceTypes": ["org.kde.kdecoration2"]
+    "ServiceTypes": ["org.kde.kdecoration3"]
   },
-  "org.kde.kdecoration2": {
+  "org.kde.kdecoration3": {
     "blur": false,
     "kcmodule": false,
-    "recommendedBorderSize": "Normal"
+    "recommendedBorderSize": "Tiny"
   }
 }

@@ -1,121 +1,124 @@
 #include "decoration.hpp"
 
-#include <QPainter>
-
-#include <KDecoration2/DecoratedClient>
-#include <KDecoration2/DecorationSettings>
+#include <KDecoration3/DecoratedWindow>
+#include <KDecoration3/DecorationSettings>
 #include <KPluginFactory>
 #include <KSharedConfig>
+#include <QPainter>
 
 K_PLUGIN_FACTORY_WITH_JSON(ArstotzkaDecorationFactory,
                            "metadata.json",
                            registerPlugin<Arstotzka::Decoration>();)
 
 using namespace std;
-using namespace KDecoration2;
+using namespace KDecoration3;
 
 namespace Arstotzka {
-Decoration::Decoration(QObject *parent, const QVariantList &args)
-    : KDecoration2::Decoration(parent, args) {
-}
+Decoration::Decoration(QObject* parent, const QVariantList& args)
+    : KDecoration3::Decoration(parent, args) {}
 
 bool Decoration::init() {
-    configWatcher = KConfigWatcher::create(KSharedConfig::openConfig("kdeglobals"));
+    watcher = KConfigWatcher::create(KSharedConfig::openConfig("kdeglobals"));
 
-    setBorderSizes();
-    connectEvents();
-    updateColors();
+    this->connectEvents();
+    this->setBorderSizes();
+    this->updateColors();
 
     return true;
 }
 
-void Decoration::paint(QPainter *painter, const QRect &repaintRegion) {
-    if (!painter) { return; }
+void Decoration::paint(QPainter* painter, const QRectF& repaintRegion) {
+    if (!painter)
+        return;
 
-    DecoratedClient *client = this->client();
-    QRect windowRect = rect();
+    const DecoratedWindow* client = this->window();
+    const QRectF rect = this->rect();
 
     painter->save();
     painter->setPen(Qt::NoPen);
-
-    if (client->isActive()) {
-        painter->setBrush(activeColor);
-    } else {
-        painter->setBrush(inactiveColor);
-    }
-
-    painter->drawRect(windowRect);
+    painter->setBrush(client->isActive() ? active : inactive);
+    painter->drawRect(rect);
     painter->restore();
 }
 
 void Decoration::updateColors() {
-    KSharedConfig::Ptr colorsConfig = KSharedConfig::openConfig("kdeglobals");
-    KConfigGroup group = colorsConfig->group("Colors:Window");
-    activeColor = group.readEntry("DecorationFocus", QColor(255, 0, 0));
-    inactiveColor = group.readEntry("BackgroundNormal", QColor(0, 0, 0));
+    const KSharedConfig::Ptr colors = KSharedConfig::openConfig("kdeglobals");
+    const KConfigGroup group = colors->group("Colors:Window");
+    active = group.readEntry("DecorationFocus", QColor(255, 0, 0));
+    inactive = group.readEntry("BackgroundNormal", QColor(0, 0, 0));
 }
 
-inline constexpr int sizeToInt(const BorderSize size) {
+inline constexpr int sizeToInt(const BorderSize size) noexcept {
     switch (size) {
-    case BorderSize::Oversized:
-        return 10;
-    case BorderSize::VeryHuge:
-        return 6;
-    case BorderSize::Huge:
-        return 5;
-    case BorderSize::VeryLarge:
-        return 4;
-    case BorderSize::Large:
-        return 3;
-    case BorderSize::NoSides:
-    case BorderSize::Normal:
-        return 2;
-    case BorderSize::None:
-        return 0;
-    case BorderSize::Tiny:
-    default:
-        return 1;
+        case BorderSize::Oversized:
+            return 10;
+        case BorderSize::VeryHuge:
+            return 6;
+        case BorderSize::Huge:
+            return 5;
+        case BorderSize::VeryLarge:
+            return 4;
+        case BorderSize::Large:
+            return 3;
+        case BorderSize::NoSides:
+        case BorderSize::Normal:
+            return 2;
+        case BorderSize::None:
+            return 0;
+        case BorderSize::Tiny:
+        default:
+            return 1;
     }
 }
 
 void Decoration::setBorderSizes() {
-    const DecoratedClient *client = this->client();
-    const shared_ptr<DecorationSettings> config = settings();
-    const BorderSize desired = config->borderSize();
-    const int base = config->smallSpacing();
+    const DecorationSettings* settings = this->settings().get();
+    const BorderSize desired = settings->borderSize();
+    const int base = settings->smallSpacing();
     const int size = base * sizeToInt(desired);
-    const int sides = (desired == BorderSize::NoSides) ? 0 : size;
+    const int sides = (BorderSize::NoSides == desired) ? 0 : size;
 
-    setBorders(QMargins(sides, size, sides, size));
+    this->setBorders(QMargins(sides, size, sides, size));
 }
+
+const QString General = QStringLiteral("General");
+const QByteArray Scheme = QByteArrayLiteral("ColorScheme");
+const QByteArray Accent = QByteArrayLiteral("AccentColor");
 
 void Decoration::connectEvents() {
-    DecoratedClient *clientPtr = this->client();
-    DecorationSettings *settingsPtr = settings().get();
+    const DecoratedWindow* window = this->window();
+    const DecorationSettings* settings = this->settings().get();
 
-    connect(clientPtr,
-            &DecoratedClient::activeChanged,
-            this,
-            [this](bool thisIsLongToPreventFmtCollapse) { this->update(); });
+    connect(
+        window,
+        &DecoratedWindow::activeChanged,
+        this,
+        [this](bool _______) { this->update(); }
+    );
 
-    connect(settingsPtr,
-            &DecorationSettings::borderSizeChanged,
-            this,
-            &Decoration::setBorderSizes);
+    connect(
+        settings,
+        &DecorationSettings::borderSizeChanged,
+        this,
+        &Decoration::setBorderSizes
+    );
 
-    connect(configWatcher.data(),
-            &KConfigWatcher::configChanged,
-            this,
-            [this](const KConfigGroup &group, const QByteArrayList &names) {
-                if (group.name() != QStringLiteral("General")) { return; }
-                if (false // I want nice alignment
-                    || names.contains(QByteArrayLiteral("ColorScheme"))
-                    || names.contains(QByteArrayLiteral("AccentColor"))) {
-                    updateColors();
-                    this->update();
-                }
-            });
+    connect(
+        watcher.data(),
+        &KConfigWatcher::configChanged,
+        this,
+        [this](const KConfigGroup& group, const QByteArrayList& names) {
+            bool general = group.name() == General;
+            bool section = names.contains(Scheme) || names.contains(Accent);
+
+            if (!general || !section)
+                return;
+
+            this->updateColors();
+            this->update();
+        }
+    );
 }
-}
+}  // namespace Arstotzka
 
 #include "decoration.moc"
