@@ -16,7 +16,8 @@ namespace Arstotzka {
 Decoration::Decoration(QObject* parent, const QVariantList& args)
     : KDecoration3::Decoration(parent, args) {}
 
-bool Decoration::init() {
+bool
+Decoration::init() {
     watcher = KConfigWatcher::create(KSharedConfig::openConfig("kdeglobals"));
 
     this->connectEvents();
@@ -26,7 +27,8 @@ bool Decoration::init() {
     return true;
 }
 
-void Decoration::paint(QPainter* painter, const QRectF& repaintRegion) {
+void
+Decoration::paint(QPainter* painter, const QRectF& repaintRegion) {
     if (!painter)
         return;
 
@@ -40,14 +42,16 @@ void Decoration::paint(QPainter* painter, const QRectF& repaintRegion) {
     painter->restore();
 }
 
-void Decoration::updateColors() {
+void
+Decoration::updateColors() {
     const KSharedConfig::Ptr colors = KSharedConfig::openConfig("kdeglobals");
     const KConfigGroup group = colors->group("Colors:Window");
     active = group.readEntry("DecorationFocus", QColor(255, 0, 0));
     inactive = group.readEntry("BackgroundNormal", QColor(0, 0, 0));
 }
 
-inline constexpr int sizeToInt(const BorderSize size) noexcept {
+inline constexpr int
+sizeToInt(const BorderSize size) noexcept {
     switch (size) {
         case BorderSize::Oversized:
             return 10;
@@ -70,7 +74,8 @@ inline constexpr int sizeToInt(const BorderSize size) noexcept {
     }
 }
 
-void Decoration::setBorderSizes() {
+void
+Decoration::setBorderSizes() {
     const DecorationSettings* settings = this->settings().get();
     const BorderSize desired = settings->borderSize();
     const int base = settings->smallSpacing();
@@ -84,7 +89,8 @@ const QString General = QStringLiteral("General");
 const QByteArray Scheme = QByteArrayLiteral("ColorScheme");
 const QByteArray Accent = QByteArrayLiteral("AccentColor");
 
-void Decoration::connectEvents() {
+void
+Decoration::connectEvents() {
     const DecoratedWindow* window = this->window();
     const DecorationSettings* settings = this->settings().get();
     const KConfigWatcher* const config = watcher.data();

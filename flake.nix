@@ -48,7 +48,12 @@
           default = import ./shell.nix { inherit pkgs arstotzka; };
         };
       }
-    );
+    )
+    // {
+      overlays.default = final: prev: {
+        arstotzka = prev.callPackage ./package.nix { };
+      };
+    };
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";

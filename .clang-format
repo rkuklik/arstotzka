@@ -10,4 +10,5 @@ UseTab: Never
 AlignAfterOpenBracket: BlockIndent
 BinPackArguments: false
 BinPackParameters: false
+BreakAfterReturnType: All
 IndentAccessModifiers: true

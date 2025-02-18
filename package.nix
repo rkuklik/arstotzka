@@ -22,6 +22,10 @@ stdenv.mkDerivation rec {
     kcoreaddons
     kdecoration
   ];
+  cmakeFlags = [
+    "-DQT_MAJOR_VERSION=6"
+    "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
+  ];
 
   meta = {
     description = "Simple border for KDE Plasma 6";
