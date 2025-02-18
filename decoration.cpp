@@ -3,7 +3,6 @@
 #include <KDecoration3/DecoratedWindow>
 #include <KDecoration3/DecorationSettings>
 #include <KPluginFactory>
-#include <KSharedConfig>
 #include <QPainter>
 
 K_PLUGIN_FACTORY_WITH_JSON(ArstotzkaDecorationFactory,
@@ -31,12 +30,12 @@ void Decoration::paint(QPainter* painter, const QRectF& repaintRegion) {
     if (!painter)
         return;
 
-    const DecoratedWindow* client = this->window();
+    const DecoratedWindow* window = this->window();
     const QRectF rect = this->rect();
 
     painter->save();
     painter->setPen(Qt::NoPen);
-    painter->setBrush(client->isActive() ? active : inactive);
+    painter->setBrush(window->isActive() ? active : inactive);
     painter->drawRect(rect);
     painter->restore();
 }
@@ -88,6 +87,7 @@ const QByteArray Accent = QByteArrayLiteral("AccentColor");
 void Decoration::connectEvents() {
     const DecoratedWindow* window = this->window();
     const DecorationSettings* settings = this->settings().get();
+    const KConfigWatcher* const config = watcher.data();
 
     connect(
         window,
@@ -104,7 +104,7 @@ void Decoration::connectEvents() {
     );
 
     connect(
-        watcher.data(),
+        config,
         &KConfigWatcher::configChanged,
         this,
         [this](const KConfigGroup& group, const QByteArrayList& names) {
